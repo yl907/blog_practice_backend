@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 注意写上namespace="...BlogMapper", 这用于连接xml文件和mapper接口 -->
+<mapper namespace="com.yl.ylBlog.mapper.BlogMapper">
+
+    <!--  注意写上type="...Blog", 这用于声明返回类型是Blog  -->
+    <resultMap id="BlogResultMap" type="com.yl.ylBlog.domain.Blog">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, title, content
+    </sql>
+
+    <!--  ResultMap决定了数据库的每一列(column)对应于某一个Java类(type=)的某一个属性值(property=)  -->
+    <select id="getAllBlogs" resultMap="BlogResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM blogs;
+    </select>
+
+    <select id="getBlogById" resultMap="BlogResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM blogs
+        WHERE id=#{id};
+    </select>
+
+    <insert id="insertBlog">
+        INSERT INTO blogs(<include refid="Base_Column_List" />)
+        VALUES(#{id}, #{title}, #{content});
+    </insert>
+
+    <delete id="deleteBlogById">
+        DELETE FROM blogs
+        WHERE id=#{id};
+    </delete>
+
+    <update id="updateBlogById">
+        UPDATE blogs
+        SET title=#{newTitle}, content=#{newContent}
+        WHERE id=#{id};
+    </update>
+</mapper>
